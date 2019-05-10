@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components/native';
-import { Dimensions, View, Text, StyleSheet } from 'react-native';
+import { Dimensions } from 'react-native';
 
 const { height, width } = Dimensions.get("window");
 
@@ -26,7 +26,7 @@ const CompletedText = styled(BasicText)`
   text-decoration-line: line-through;
 `;
 
-const UncompletedText = styled(Text)`
+const UncompletedText = styled(BasicText)`
   color: #353839;
 `;
 
@@ -54,57 +54,11 @@ export default class ToDo extends Component {
     const { id, text, isCompleted, uncomplete, complete } = this.props;
     return (
       <ContainerView>
-        {/* { isCompleted ? <CompletedText>{text}</CompletedText> : <UncompletedText>{text}</UncompletedText> } */}
-        <Text
-          style={[
-            styles.text,
-            isCompleted ? styles.completedText : styles.uncompletedText
-          ]}
-        >
-          {text}
-        </Text>
+        { isCompleted ? <CompletedText>{text}</CompletedText> : <UncompletedText>{text}</UncompletedText> }
         <TouchableOpacity onPressOut={() => (isCompleted ? uncomplete(id) : complete(id))}>
-        {/* { isCompleted ? <CompleteRadioView /> : <UncompleteRadioView /> } */}
-          <View
-            style={[
-              styles.radio,
-              isCompleted ? styles.radioComplete : styles.radioUncomplete
-            ]}
-          />
+          { isCompleted ? <CompleteRadioView /> : <UncompleteRadioView /> }
         </TouchableOpacity>
       </ContainerView>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    borderBottomColor: "#bbb",
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    width: width - 50,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between"
-  },
-  text: {
-    fontWeight: "600",
-    fontSize: 20,
-    marginVertical: 20,
-    marginHorizontal: 20
-  },
-  uncompletedText: { color: "#353839" },
-  completedText: { color: "#bbb", textDecorationLine: "line-through" },
-  radio: {
-    width: 30,
-    height: 30,
-    borderWidth: 3,
-    borderRadius: 15,
-    marginLeft: 30
-  },
-  radioComplete: {
-    borderColor: "#bbb"
-  },
-  radioUncomplete: {
-    borderColor: "#F23657"
-  }
-});
