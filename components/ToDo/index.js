@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components/native';
-import { Dimensions } from 'react-native';
+import { Dimensions, View, Text, StyleSheet } from 'react-native';
 
 const { height, width } = Dimensions.get("window");
 
@@ -14,14 +14,14 @@ const ContainerView = styled.View`
   justify-content: space-between;
 `;
 
-const Text = styled.Text`
+const BasicText = styled.Text`
   font-weight: 600;
   font-size: 20;
   margin-vertical: 20px;
   margin-horizontal: 20px;
 `;
 
-const CompletedText = styled(Text)`
+const CompletedText = styled(BasicText)`
   color: #bbb;
   text-decoration-line: line-through;
 `;
@@ -54,25 +54,57 @@ export default class ToDo extends Component {
     const { id, text, isCompleted, uncomplete, complete } = this.props;
     return (
       <ContainerView>
-        { isCompleted ? <CompletedText>{text}</CompletedText> : <UncompletedText>{text}</UncompletedText> }
-        {/* <Text
+        {/* { isCompleted ? <CompletedText>{text}</CompletedText> : <UncompletedText>{text}</UncompletedText> } */}
+        <Text
           style={[
             styles.text,
             isCompleted ? styles.completedText : styles.uncompletedText
           ]}
         >
           {text}
-        </Text> */}
+        </Text>
         <TouchableOpacity onPressOut={() => (isCompleted ? uncomplete(id) : complete(id))}>
-        { isCompleted ? <CompleteRadioView /> : <UncompleteRadioView /> }
-          {/* <View
+        {/* { isCompleted ? <CompleteRadioView /> : <UncompleteRadioView /> } */}
+          <View
             style={[
               styles.radio,
               isCompleted ? styles.radioComplete : styles.radioUncomplete
             ]}
-          /> */}
+          />
         </TouchableOpacity>
       </ContainerView>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    borderBottomColor: "#bbb",
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    width: width - 50,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between"
+  },
+  text: {
+    fontWeight: "600",
+    fontSize: 20,
+    marginVertical: 20,
+    marginHorizontal: 20
+  },
+  uncompletedText: { color: "#353839" },
+  completedText: { color: "#bbb", textDecorationLine: "line-through" },
+  radio: {
+    width: 30,
+    height: 30,
+    borderWidth: 3,
+    borderRadius: 15,
+    marginLeft: 30
+  },
+  radioComplete: {
+    borderColor: "#bbb"
+  },
+  radioUncomplete: {
+    borderColor: "#F23657"
+  }
+});
