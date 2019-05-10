@@ -103,9 +103,14 @@ export default class App extends Component {
             onSubmitEditing={this._addToDo}
             />
           <ScrollView>
-            {Object.values(toDos).map(toDo => {
-              return <ToDo key={toDo.id} {...toDo} />
-            })}
+            {Object.values(toDos).map(toDo => (
+              <ToDo
+                key={toDo.id}
+                {...toDo}
+                uncomplete={this._uncompleteToDo}
+                complete={this._completeToDo}
+              />
+            ))}
           </ScrollView>
         </CardView>
       </ContainerView>
@@ -159,5 +164,35 @@ export default class App extends Component {
     } catch (err) {
       console.log(err);
     }
+  };
+
+  _uncompleteToDo = (id) => {
+    this.setState(prevState => {
+      return {
+        ...prevState,
+        toDos: {
+          ...prevState.toDos,
+          [id]: {
+            ...prevState.toDos[id],
+            isCompleted: false
+          }
+        }
+      };
+    });
+  };
+
+  _completeToDo = (id) => {
+    this.setState(prevState =>{
+      return {
+        ...prevState,
+        toDos: {
+          ...prevState.toDos,
+          [id]: {
+            ...prevState.toDos[id],
+            isCompleted: true
+          }
+        }
+      };
+    });
   };
 }

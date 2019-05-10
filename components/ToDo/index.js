@@ -51,7 +51,7 @@ const UncompleteRadioView = styled(RadioView)`
 export default class ToDo extends Component {
   static propTypes = {};
   render() {
-    const { id, text, isCompleted } = this.props;
+    const { id, text, isCompleted, uncomplete, complete } = this.props;
     return (
       <ContainerView>
         { isCompleted ? <CompletedText>{text}</CompletedText> : <UncompletedText>{text}</UncompletedText> }
@@ -63,7 +63,7 @@ export default class ToDo extends Component {
         >
           {text}
         </Text> */}
-        <TouchableOpacity>
+        <TouchableOpacity onPressOut={() => (isCompleted ? uncomplete(id) : complete(id))}>
         { isCompleted ? <CompleteRadioView /> : <UncompleteRadioView /> }
           {/* <View
             style={[
