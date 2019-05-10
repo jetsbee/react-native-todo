@@ -8,6 +8,7 @@ import {
 import { AppLoading } from 'expo';
 import styled, { css } from 'styled-components/native';
 import uuidv1 from 'uuid/v1';
+import ToDo from './components/ToDo';
 
 const { height, width } = Dimensions.get('window');
 
@@ -41,14 +42,21 @@ const NewToDoTextInput = styled.TextInput`
   padding: 20px;
   border-bottom-color: #bbb;
   border-bottom-width: 1px;
-  font-size: 20px;
+  font-size: 25px;
 `;
 
 const TouchableWithoutFeedback = styled.TouchableWithoutFeedback``;
 
 const KeyboardAvoidingView = styled.KeyboardAvoidingView``;
 
-const ScrollView = styled.ScrollView``;
+const ScrollView = styled.ScrollView.attrs(
+  (p) => ({
+    contentContainerStyle: css`
+      flex: 1;
+      align-items: center;
+    `
+  })
+)``;
 
 const TitleText = styled.Text`
   margin-top: 50px;
@@ -64,7 +72,8 @@ export default class App extends Component {
     super(props);
     this.state = {
       newToDo: '',
-      loadedToDos: false
+      loadedToDos: false,
+      toDos: {}
     };
   }
 
@@ -73,33 +82,33 @@ export default class App extends Component {
   }
 
   render() {
-    const { newToDo, loadedToDos } = this.state;
+    const { newToDo, loadedToDos, toDos } = this.state;
     if (!loadedToDos) {
       return <AppLoading />;
     }
-    
+
     return (
-      <TouchableWithoutFeedback onPress={this._dismissKeyboard}>
-        <ContainerView>
-          <StatusBar barStyle={'light-content'} />
-          <TitleText>React-Native To Do</TitleText>
-          <CardView>
-            <NewToDoTextInput
-              value={newToDo}
-              placeholderTextColor={'#999'}
-              placeholder={'New To Do'}
-              returnKeyType={'done'}
-              // ?????
-              blurOnSubmit={true}
-              onChangeText={this._controllNewToDo}
-              onSubmitEditing={this._addToDo}
-              />
-            <KeyboardAvoidingView>
-              <ScrollView />
-            </KeyboardAvoidingView>
-          </CardView>
-        </ContainerView>
-      </TouchableWithoutFeedback>
+      <ContainerView>
+        <StatusBar barStyle={'light-content'} />
+        <TitleText>React-Native To Do</TitleText>
+        <CardView>
+          <NewToDoTextInput
+            value={newToDo}
+            placeholderTextColor={'#999'}
+            placeholder={'New To Do'}
+            returnKeyType={'done'}
+            // ?????
+            blurOnSubmit={true}
+            onChangeText={this._controllNewToDo}
+            onSubmitEditing={this._addToDo}
+            />
+          <ScrollView>
+            {Object.values(toDos).map(toDo => {
+              return <ToDo key={toDo.id} {...toDo} />
+            })}
+          </ScrollView>
+        </CardView>
+      </ContainerView>
     );
   }
 
@@ -116,18 +125,15 @@ export default class App extends Component {
   _addToDo = () => {
     const { newToDo } = this.state;
     let newState;
-    this._dismissKeyboard();
 
-    // prevState = {1:1,2:2}
     this.setState(prevState => {
+      const ID = uuidv1();
       const newToDoObject = {
-        id: uuidv1(),
-        isCompleted: false,
-        text: newToDo
+        [ID]: { id: ID, isCompleted: false, text: newToDo }
       };
       newState = {
         ...prevState,
-        toDos: [...prevState.toDos, newToDoObject],
+        toDos: { ...prevState.toDos, ...newToDoObject },
         newToDo: ''
       };
       const saveState = AsyncStorage.setItem(
@@ -140,7 +146,11 @@ export default class App extends Component {
 
   _loadToDos = async () => {
     try {
-      const toDos = (await AsyncStorage.getItem("toDos")) || JSON.stringify([]);
+      const toDos = (await AsyncStorage.getItem('toDos')) || JSON.stringify({});
+      // await AsyncStorage.setItem(
+      //   'toDos',
+      //   JSON.stringify({})
+      // );
       const parsedToDos = JSON.parse(toDos);
       this.setState({
         loadedToDos: true,
