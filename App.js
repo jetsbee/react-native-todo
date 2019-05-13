@@ -136,9 +136,8 @@ export default class App extends Component {
 
   _addToDo = () => {
     const { newToDo } = this.state;
-
     if (newToDo !== '') {
-      this.setState = ({
+      this.setState({
         newToDo: ''
       });
 
