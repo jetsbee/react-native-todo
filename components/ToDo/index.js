@@ -48,16 +48,48 @@ const UncompleteRadioView = styled(RadioView)`
   border-color: #F23657;
 `;
 
+const ColumnView = styled.View`
+  width: ${width / 2}px;
+  flex-direction: row;
+  align-items: center;
+`;
+
+const ActionsView = styled.View`
+  flex-direction: row;
+`;
+
+const ActionContainerView = styled.View`
+  margin-horizontal: 5px;
+`;
+
+const ActionText = styled.Text`
+  font-size: 15px;
+`;
+
 export default class ToDo extends Component {
   static propTypes = {};
   render() {
     const { id, text, isCompleted, uncomplete, complete } = this.props;
     return (
       <ContainerView>
-        <TouchableOpacity onPressOut={() => (isCompleted ? uncomplete(id) : complete(id))}>
-          { isCompleted ? <CompleteRadioView /> : <UncompleteRadioView /> }
-        </TouchableOpacity>
-        { isCompleted ? <CompletedText>{text}</CompletedText> : <UncompletedText>{text}</UncompletedText> }
+        <ColumnView>
+          <TouchableOpacity onPressOut={() => (isCompleted ? uncomplete(id) : complete(id))}>
+            { isCompleted ? <CompleteRadioView /> : <UncompleteRadioView /> }
+          </TouchableOpacity>
+          { isCompleted ? <CompletedText>{text}</CompletedText> : <UncompletedText>{text}</UncompletedText> }
+        </ColumnView>
+        <ActionsView>
+          <TouchableOpacity>
+            <ActionContainerView>
+              <ActionText>✏️</ActionText>
+            </ActionContainerView>
+          </TouchableOpacity>
+          <TouchableOpacity>
+            <ActionContainerView>
+              <ActionText>❌</ActionText>
+            </ActionContainerView>
+          </TouchableOpacity>
+        </ActionsView>
       </ContainerView>
     );
   }
