@@ -109,6 +109,7 @@ export default class App extends Component {
                 {...toDo}
                 uncomplete={this._uncompleteToDo}
                 complete={this._completeToDo}
+                updateToDo={this._updateToDo}
               />
             ))}
           </ScrollView>
@@ -125,6 +126,10 @@ export default class App extends Component {
     this.setState({
       newToDo: text
     });
+  };
+
+  _saveState = newToDos => {
+    const saveState = AsyncStorage.setItem("toDos", JSON.stringify(newToDos));
   };
 
   _addToDo = () => {
@@ -197,7 +202,20 @@ export default class App extends Component {
     });
   };
 
-  _saveState = newToDos => {
-    const saveState = AsyncStorage.setItem("toDos", JSON.stringify(newToDos));
+  _updateToDo = (id, text) => {
+    this.setState(prevState => {
+      const newState = {
+        ...prevState,
+        toDos: {
+          ...prevState.toDos,
+          [id]: {
+            ...prevState.toDos[id],
+            text
+          }
+        }
+      };
+      this._saveState(newState.toDos);
+      return { ...newState };
+    });
   };
 }

@@ -104,7 +104,7 @@ export default class ToDo extends Component {
 
   render() {
     const { id, text, isCompleted, uncomplete, complete } = this.props;
-    const { isEditing } = this.state;
+    const { isEditing, toDo } = this.state;
     return (
       <ContainerView>
         <ColumnView>
@@ -114,9 +114,9 @@ export default class ToDo extends Component {
           { isEditing ?
             <EditingTextInput
               multiline={true}
-              onChangeText={(text)=>{console.log(text)}}
-              onEndEditing={()=>{console.log('END EDITING!!')}}
-              value={text}
+              onChangeText={this._controlText}
+              onEndEditing={this._endEditing}
+              value={toDo}
               completedStyle={isCompleted}
             /> :
             <ToDoText completedStyle={isCompleted}>
@@ -124,19 +124,53 @@ export default class ToDo extends Component {
             </ToDoText>
           }
         </ColumnView>
-        <ActionsView>
-          <TouchableOpacity>
-            <ActionContainerView>
-              <ActionText>✏️</ActionText>
-            </ActionContainerView>
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <ActionContainerView>
-              <ActionText>❌</ActionText>
-            </ActionContainerView>
-          </TouchableOpacity>
-        </ActionsView>
+        { isEditing ? (
+            <ActionsView>
+              <TouchableOpacity onPressOut={this._endEditing}>
+                <ActionContainerView>
+                  <ActionText>✅</ActionText>
+                </ActionContainerView>
+              </TouchableOpacity>
+            </ActionsView>
+          ) : (
+            <ActionsView>
+              <TouchableOpacity onPressOut={this._startEditing}>
+                <ActionContainerView>
+                  <ActionText>✏️</ActionText>
+                </ActionContainerView>
+              </TouchableOpacity>
+              <TouchableOpacity>
+                <ActionContainerView>
+                  <ActionText>❌</ActionText>
+                </ActionContainerView>
+              </TouchableOpacity>
+            </ActionsView>
+          )
+        }
       </ContainerView>
     );
   }
+
+  _startEditing = () => {
+    const { text } = this.props;
+    this.setState({
+      isEditing: true,
+      toDo: text
+    });
+  };
+
+  _controlText = text => {
+    this.setState({
+      toDo: text
+    });
+  };
+
+  _endEditing = () => {
+    const { toDo } = this.state;
+    const { updateToDo, id } = this.props;
+    updateToDo(id, toDo);
+    this.setState({
+      isEditing: false
+    });
+  };
 }
