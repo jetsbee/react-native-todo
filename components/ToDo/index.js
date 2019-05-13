@@ -14,32 +14,34 @@ const ContainerView = styled.View`
   justify-content: space-between;
 `;
 
-const basicTextCSS = css`
+const toDoTextCSS = css`
   font-weight: 600;
   font-size: 20;
   margin-vertical: 20px;
   flex: 1;
 `;
 
-const BasicText = styled.Text`
-  ${basicTextCSS}
-`;
-
-const CompletedTextCSS = css`
+const completedTextCSS = css`
   color: #bbb;
   text-decoration-line: line-through;
 `;
 
-const CompletedText = styled(BasicText)`
-  ${CompletedTextCSS}
-`;
-
-const UncompletedTextCSS = css`
+const uncompletedTextCSS = css`
   color: #353839;
 `;
 
-const UncompletedText = styled(BasicText)`
-  ${UncompletedTextCSS}
+const ToDoText = styled.Text`
+  ${toDoTextCSS}
+  ${props => {
+    if(props.completedStyle === true){
+      return completedTextCSS;
+    } else if(props.completedStyle === false){
+      return uncompletedTextCSS;
+    } else {
+      console.log(props.completedStyle);
+      return null;
+    }
+  }}
 `;
 
 const TouchableOpacity = styled.TouchableOpacity``;
@@ -79,14 +81,14 @@ const ActionText = styled.Text`
 `;
 
 const EditingTextInput = styled.TextInput`
-  ${basicTextCSS}
+  ${toDoTextCSS}
   width: ${width / 1.5};
   margin-vertical: 15px;
   padding-bottom: 5px;
   ${
     props => props.completedStyle
-    ? CompletedTextCSS
-    : UncompletedTextCSS
+    ? completedTextCSS
+    : uncompletedTextCSS
   }
 `;
 
@@ -96,7 +98,7 @@ export default class ToDo extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isEditing: true
+      isEditing: false
     };
   }
 
@@ -117,7 +119,10 @@ export default class ToDo extends Component {
               value={text}
               completedStyle={isCompleted}
             /> :
-            isCompleted ? <CompletedText>{text}</CompletedText> : <UncompletedText>{text}</UncompletedText> }
+            <ToDoText completedStyle={isCompleted}>
+              {text}
+            </ToDoText>
+          }
         </ColumnView>
         <ActionsView>
           <TouchableOpacity>
