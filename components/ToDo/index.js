@@ -18,7 +18,7 @@ const BasicText = styled.Text`
   font-weight: 600;
   font-size: 20;
   margin-vertical: 20px;
-  margin-horizontal: 20px;
+  flex: 1;
 `;
 
 const CompletedText = styled(BasicText)`
@@ -37,7 +37,7 @@ const RadioView = styled.View`
   height: 30px;
   border-width: 3px;
   border-radius: 15;
-  margin-left: 30px;
+  margin-right: 30px;
 `;
 
 const CompleteRadioView = styled(RadioView)`
@@ -54,10 +54,10 @@ export default class ToDo extends Component {
     const { id, text, isCompleted, uncomplete, complete } = this.props;
     return (
       <ContainerView>
-        { isCompleted ? <CompletedText>{text}</CompletedText> : <UncompletedText>{text}</UncompletedText> }
         <TouchableOpacity onPressOut={() => (isCompleted ? uncomplete(id) : complete(id))}>
           { isCompleted ? <CompleteRadioView /> : <UncompleteRadioView /> }
         </TouchableOpacity>
+        { isCompleted ? <CompletedText>{text}</CompletedText> : <UncompletedText>{text}</UncompletedText> }
       </ContainerView>
     );
   }
