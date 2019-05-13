@@ -110,6 +110,7 @@ export default class App extends Component {
                 uncomplete={this._uncompleteToDo}
                 complete={this._completeToDo}
                 updateToDo={this._updateToDo}
+                deleteToDo={this._deleteToDo}
               />
             ))}
           </ScrollView>
@@ -213,6 +214,19 @@ export default class App extends Component {
             text
           }
         }
+      };
+      this._saveState(newState.toDos);
+      return { ...newState };
+    });
+  };
+
+  _deleteToDo = id => {
+    this.setState(prevState => {
+      const toDos = prevState.toDos;
+      delete toDos[id];
+      const newState = {
+        ...prevState,
+        ...toDos
       };
       this._saveState(newState.toDos);
       return { ...newState };

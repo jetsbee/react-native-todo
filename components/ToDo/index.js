@@ -103,7 +103,7 @@ export default class ToDo extends Component {
   }
 
   render() {
-    const { id, text, isCompleted, uncomplete, complete } = this.props;
+    const { id, text, isCompleted, uncomplete, complete, deleteToDo } = this.props;
     const { isEditing, toDo } = this.state;
     return (
       <ContainerView>
@@ -139,7 +139,9 @@ export default class ToDo extends Component {
                   <ActionText>✏️</ActionText>
                 </ActionContainerView>
               </TouchableOpacity>
-              <TouchableOpacity>
+              <TouchableOpacity onPressOut={() => {
+                deleteToDo(id);
+              }}>
                 <ActionContainerView>
                   <ActionText>❌</ActionText>
                 </ActionContainerView>
