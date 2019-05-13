@@ -101,6 +101,7 @@ export default class App extends Component {
             blurOnSubmit={true}
             onChangeText={this._controllNewToDo}
             onSubmitEditing={this._addToDo}
+            autoCorrect={false}
             />
           <ScrollView>
             {Object.values(toDos).sort((a,b) => a.createdAt < b.createdAt).map(toDo => (
@@ -136,17 +137,19 @@ export default class App extends Component {
   _addToDo = () => {
     const { newToDo } = this.state;
 
-    if (newToDo !== "") {
-      let newState;
+    if (newToDo !== '') {
+      this.setState = ({
+        newToDo: ''
+      });
+
       this.setState(prevState => {
         const ID = uuidv1();
         const newToDoObject = {
           [ID]: { id: ID, isCompleted: false, text: newToDo, createdAt: Date.now() }
         };
-        newState = {
+        const newState = {
           ...prevState,
           toDos: { ...prevState.toDos, ...newToDoObject },
-          newToDo: ''
         };
         this._saveState(newState.toDos);
         return { ...newState };
